@@ -15,8 +15,9 @@ public class Result {
     private String id;
     private String key;
     private String name;
-    private DateTime datetime;
-    private String version;
+    private String qualifier;
+//    private DateTime datetime;
+//    private String version;
     private List<Condition> conditions;
     private ConditionStatus status;
 
@@ -44,21 +45,21 @@ public class Result {
         this.name = name;
     }
 
-    public DateTime getDatetime() {
-        return datetime;
-    }
+//    public DateTime getDatetime() {
+//        return datetime;
+//    }
 
-    public void setDatetime(DateTime datetime) {
-        this.datetime = datetime;
-    }
+//    public void setDatetime(DateTime datetime) {
+//        this.datetime = datetime;
+//    }
 
-    public String getVersion() {
-        return version;
-    }
+//    public String getVersion() {
+//        return version;
+//    }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+//    public void setVersion(String version) {
+//        this.version = version;
+//    }
 
     public List<Condition> getConditions() {
         return conditions;
@@ -74,5 +75,9 @@ public class Result {
 
     public void setStatus(ConditionStatus status) {
         this.status = status;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
     }
 }

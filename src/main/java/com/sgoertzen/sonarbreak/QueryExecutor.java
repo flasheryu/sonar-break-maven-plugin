@@ -25,7 +25,8 @@ import java.util.List;
  */
 public class QueryExecutor {
 
-    public static final String SONAR_FORMAT_PATH = "api/resources/index?resource=%s&metrics=quality_gate_details";
+//    public static final String SONAR_FORMAT_PATH = "api/resources/index?resource=%s&metrics=quality_gate_details";
+    public static final String SONAR_FORMAT_PATH = "api/measures/component?componentKey=%s&metricKeys=quality_gate_details";
     public static final int SONAR_CONNECTION_RETRIES = 10;
     public static final int SONAR_PROCESSING_WAIT_TIME = 10000;  // wait time between sonar checks in milliseconds
 
@@ -103,14 +104,16 @@ public class QueryExecutor {
             // If this is the first time the job is running on sonar the URL might not be available.  Return null and wait.
             if (isURLAvailable(queryURL, 1)) {
                 Result result = fetchSonarStatus(queryURL);
-                if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
-                    log.debug("Found a sonar job run that matches version and in the correct time frame");
-                    return result;
-                }
-                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
-                                "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
-                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
-                log.debug(message);
+//                if (result.getVersion().equals(version) && result.getDatetime().isAfter(oneMinuteAgo)) {
+//                    log.debug("Found a sonar job run that matches version and in the correct time frame");
+//                    return result;
+//                }
+//                String message = String.format("Sleeping while waiting for sonar to process job.  Target Version: %s.  " +
+//                                "Sonar reporting Version: %s.  Looking back until: %s  Last result time: %s", version,
+//                        result.getVersion(), oneMinuteAgo.toString(), result.getDatetime().toString());
+//                log.debug(message);
+                return result;
+//                break;
             } else {
                 log.debug(String.format("Query url not available yet: %s", queryURL));
             }
@@ -192,16 +195,23 @@ public class QueryExecutor {
         ObjectMapper mapper = new ObjectMapper();
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         mapper.setDateFormat(df);
-        List<Result> results;
+//        List<Result> results;
+        Result results;
         try {
-            results = mapper.readValue(response, new TypeReference<List<Result>>() {
+//            results = mapper.readValue(response, new TypeReference<List<Result>>() {
+                results = mapper.readValue(response, new TypeReference<Result>() {
             });
         } catch (IOException e) {
             throw new SonarBreakException("Unable to parse the json into a List of QualityGateResults.  Json is: " + response, e);
         }
-        if (results == null || results.size() != 1) {
+//        if (results == null || results.size() != 1) {
+//            throw new SonarBreakException("Unable to deserialize JSON response: " + response);
+//        }
+
+        if (results == null) {
             throw new SonarBreakException("Unable to deserialize JSON response: " + response);
         }
-        return results.get(0);
+//        return results.get(0);
+        return results;
     }
 }
